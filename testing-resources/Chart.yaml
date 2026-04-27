@@ -1,0 +1,6 @@
+apiVersion: v2
+name: test-templates
+description: Collection of workflow templates for testing and learning purposes
+type: application
+
+version: 0.1.0
