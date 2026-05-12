@@ -3,11 +3,12 @@ kind: ClusterWorkflowTemplate
 metadata:
   name: boilerplate-example
   labels:
-    workflows.diamond.ac.uk/science-group: workflows-examples
+    workflows.diamond.ac.uk/science-group-mx: "true"
   annotations:
     workflows.argoproj.io/title: boiler-plate-example for docs
     workflows.argoproj.io/description: |
         This is an example demo-ing the boilerplate
+    workflows.diamond.ac.uk/repository: https://github.com/DiamondLightSource/mx-workflows
 
 spec:
   entrypoint: workflow-entry
@@ -56,9 +57,9 @@ spec:
       source: |
         import numpy as np
         import json
-        start = {{inputs.parameters.start}}
-        stop = {{inputs.parameters.stop}}
-        step = {{inputs.parameters.step}}
+        start = {{`{{inputs.parameters.start}}`}}
+        stop = {{`{{inputs.parameters.stop}}`}}
+        step = {{`{{inputs.parameters.step}}`}}
 
         vals = np.arange(start,stop,step).tolist()
         with open("/tmp/data.json", "w") as f:
@@ -106,11 +107,11 @@ spec:
         arguments:
           parameters:
           - name: start
-            value: "{{workflow.parameters.start}}"
+            value: "{{`{{workflow.parameters.start}}`}}"
           - name: stop
-            value: "{{workflow.parameters.stop}}"
+            value: "{{`{{workflow.parameters.stop}}`}}"
           - name: step
-            value: "{{workflow.parameters.step}}"
+            value: "{{`{{workflow.parameters.step}}`}}"
 
       - name: plot-figure
         dependencies: [pre-processing]
