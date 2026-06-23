@@ -63,10 +63,10 @@ spec:
         command: [bash]
         source: |
           set -euo pipefail
-          echo "Running dc_sim wrapper with recipewrapper {{inputs.parameters.recipewrapper}}"
+          echo "Running dc_sim wrapper with recipewrapper {{`{{inputs.parameters.recipewrapper}}`}}"
           dlstbx.wrap \
             --wrap dc_sim \
-            --recipewrapper "{{inputs.parameters.recipewrapper}}"
+            --recipewrapper "{{`{{inputs.parameters.recipewrapper}}`}}"
 
     - name: workflow-entry
       dag:
@@ -76,4 +76,4 @@ spec:
             arguments:
               parameters:
                 - name: recipewrapper
-                  value: "{{workflow.parameters.recipewrapper}}"
+                  value: "{{`{{workflow.parameters.recipewrapper}}`}}"
