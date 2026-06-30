@@ -5,75 +5,32 @@ metadata:
   labels:
     workflows.diamond.ac.uk/science-group-mx: "true"
   annotations:
-    workflows.argoproj.io/title: Simulated Data Collection
-    workflows.argoproj.io/description: |
-      Runs a simulated data collection (dc_sim) using existing data, via the
-      dlstbx.wrap wrapper. The job parameters travel inside the serialised
-      recipewrapper file; this template only needs its path. The wrapper
-      reports back to Zocalo (queue reduce.dc_sim) only on success.
-    workflows.diamond.ac.uk/repository: https://github.com/DiamondLightSource/mx-workflows
-
+    workflows.diamond.ac.uk/repository: "https://github.com/DiamondLightSource/mx-workflows"
 spec:
   entrypoint: workflow-entry
   arguments:
     parameters:
-      # Path to the serialised recipewrapper file written by the
-      # DLS Workflows Cluster service before submission. Must be on a
-      # filesystem visible to this pod (see the dls volume mount below).
-      - name: recipewrapper
+      - name: RECIPEWRAP
         value: ""
 
-  # Mount the DLS shared filesystem so the pod can read the recipewrapper
-  # file and any source data referenced by the dc_sim job parameters.
-  volumes:
-    - name: dls
-      hostPath:
-        path: /dls
-        type: Directory
-    # Zocalo configuration + RabbitMQ credentials, needed for the wrapper to
-    # connect to the transport and send the dc_sim completion message.
-    - name: zocalo-secrets
-      secret:
-        secretName: zocalo-rabbitmq-credentials
-
   templates:
-    - name: run-dc-sim
-      inputs:
-        parameters:
-          - name: recipewrapper
-      script:
-        image: gitlab.diamond.ac.uk:5050/scisoft/mx/python-dlstbx:044a56cd
-        volumeMounts:
-          - name: dls
-            mountPath: /dls
-          - name: zocalo-secrets
-            mountPath: /etc/zocalo
-            readOnly: true
-        env:
-          # Point dlstbx.wrap at the Zocalo configuration file.
-          - name: ZOCALO_CONFIG
-            value: /etc/zocalo/configuration.yaml
-        resources:
-          requests:
-            cpu: "1"
-            memory: 2Gi
-          limits:
-            cpu: "2"
-            memory: 4Gi
-        command: [bash]
-        source: |
-          set -euo pipefail
-          echo "Running dc_sim wrapper with recipewrapper {{`{{inputs.parameters.recipewrapper}}`}}"
-          dlstbx.wrap \
-            --wrap dc_sim \
-            --recipewrapper "{{`{{inputs.parameters.recipewrapper}}`}}"
+  - name: run-dc-sim
+    inputs:
+      parameters:
+        - name: RECIPEWRAP
+    script:
+      image: ghcr.io/diamondlightsource/dlstbx
+      command: [bash]
+      source: |
+        echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}" >runinfo
+        dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}"
 
-    - name: workflow-entry
-      dag:
-        tasks:
-          - name: run-dc-sim
-            template: run-dc-sim
-            arguments:
-              parameters:
-                - name: recipewrapper
-                  value: "{{`{{workflow.parameters.recipewrapper}}`}}"
+  - name: workflow-entry
+    dag:
+      tasks:
+      - name: run-dc-sim
+        template: run-dc-sim
+        arguments:
+          parameters:
+          - name: RECIPEWRAP
+            value: "{{`{{workflow.parameters.RECIPEWRAP}}`}}"
