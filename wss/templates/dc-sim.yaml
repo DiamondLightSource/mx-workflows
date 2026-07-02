@@ -23,14 +23,14 @@ spec:
       command: [bash]
       volumeMounts:
       - name: "dlsfilesystem"
-        mountPath: "/"
+        mountPath: "/dls/tmp/wdr83388"
       source: |
         echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}" >runinfo
         dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}"
     volumes: 
     - name: dlsfilesystem
       hostPath:
-        path: "{{ inputs.parameters.RECIPEWRAP }}"
+        path: "/dls/tmp/wdr83388"
         type: Directory
 
   - name: workflow-entry
