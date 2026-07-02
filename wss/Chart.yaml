@@ -1,6 +1,0 @@
-apiVersion: v2
-name: dc-sim
-description: run dc-sim
-type: application
-
-version: 0.1.0

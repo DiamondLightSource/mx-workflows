@@ -1,3 +1,4 @@
 charts:
   - testing-resources
-  - wss
+manifests:
+  - wss/templates
