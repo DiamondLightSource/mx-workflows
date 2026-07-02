@@ -21,6 +21,7 @@ spec:
     script:
       image: ghcr.io/diamondlightsource/dlstbx
       command: [bash]
+      workingDir: "/dls/tmp/wdr83388"
       volumeMounts:
       - name: "dlsfilesystem"
         mountPath: "/dls/tmp/wdr83388"
