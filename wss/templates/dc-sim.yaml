@@ -11,7 +11,7 @@ spec:
   arguments:
     parameters:
       - name: RECIPEWRAP
-        value: ""
+        value: "" # default value
 
   templates:
   - name: run-dc-sim
@@ -21,9 +21,17 @@ spec:
     script:
       image: ghcr.io/diamondlightsource/dlstbx
       command: [bash]
+      volumeMounts:
+      - name: "dlsfilesystem"
+        mountPath: "/"
       source: |
         echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}" >runinfo
         dlstbx.wrap --wrap dc_sim --recipewrapper "{{`{{inputs.parameters.RECIPEWRAP}}`}}"
+    volumes: 
+    - name: dlsfilesystem
+      hostPath:
+        path: "{{ inputs.parameters.RECIPEWRAP }}"
+        type: Directory
 
   - name: workflow-entry
     dag:
