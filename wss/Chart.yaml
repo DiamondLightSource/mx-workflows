@@ -1,5 +1,5 @@
 apiVersion: v2
-name: wss
+name: dc-sim
 description: run dc-sim
 type: application
 
