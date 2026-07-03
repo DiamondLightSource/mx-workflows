@@ -21,12 +21,17 @@ spec:
     script:
       image: ghcr.io/diamondlightsource/dlstbx
       command: [bash]
+      workingDir: "/dls/tmp/wdr83388"
       volumeMounts:
       - name: "dlsfilesystem"
         mountPath: "/dls/tmp/wdr83388"
       source: |
-        echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
-        dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
+        print("hello world")
+        ping google.com
+        ping rabbitmq1
+        curl rabbitmq1:15672
+        wget rabbitmq1:15672
+        
     volumes: 
     - name: dlsfilesystem
       hostPath:
@@ -42,3 +47,7 @@ spec:
           parameters:
           - name: RECIPEWRAP
             value: "{{workflow.parameters.RECIPEWRAP}}"
+
+
+# echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
+# dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
