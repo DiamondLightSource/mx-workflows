@@ -28,11 +28,9 @@ spec:
       source: |
         echo "hello world"
         ping google.com
-        ping rabbitmq1
-        nc rabbitmq1:15672
-        curl rabbitmq1:15672
-        curl google.com
-        wget rabbitmq1:15672
+        ping rabbitmq1.diamond.ac.uk
+        nc rabbitmq1.diamond.ac.uk:15672
+        curl rabbitmq1.diamond.ac.uk:15672
         
     volumes: 
     - name: dlsfilesystem
