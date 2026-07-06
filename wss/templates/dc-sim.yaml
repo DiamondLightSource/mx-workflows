@@ -29,7 +29,9 @@ spec:
         echo "hello world"
         ping google.com
         ping rabbitmq1
+        nc rabbitmq1:15672
         curl rabbitmq1:15672
+        curl google.com
         wget rabbitmq1:15672
         
     volumes: 
