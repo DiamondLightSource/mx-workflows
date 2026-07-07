@@ -26,11 +26,8 @@ spec:
       - name: "dlsfilesystem"
         mountPath: "/dls/tmp/wdr83388"
       source: |
-        echo "hello world"
-        ping google.com
-        ping rabbitmq1.diamond.ac.uk
-        nc rabbitmq1.diamond.ac.uk:15672
-        curl rabbitmq1.diamond.ac.uk:15672
+        echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
+        dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
         
     volumes: 
     - name: dlsfilesystem
@@ -49,5 +46,3 @@ spec:
             value: "{{workflow.parameters.RECIPEWRAP}}"
 
 
-# echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
-# dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
