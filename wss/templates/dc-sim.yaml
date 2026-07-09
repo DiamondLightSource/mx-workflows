@@ -26,7 +26,7 @@ spec:
       - name: "dlsfilesystem"
         mountPath: "/dls/tmp/wdr83388"
       source: |
-        export ZOCALO_CONFIG="/scratch/wdr83388/workspace/zocalo-config/zocalo/configuration.yaml"
+        export ZOCALO_CONFIG="/dls_sw/apps/zocalo/staging/configuration.yaml"
         echo dlstbx.wrap -e staging --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
         dlstbx.wrap -e staging --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
         
