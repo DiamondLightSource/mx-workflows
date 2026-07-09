@@ -26,8 +26,9 @@ spec:
       - name: "dlsfilesystem"
         mountPath: "/dls/tmp/wdr83388"
       source: |
-        echo dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
-        dlstbx.wrap --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
+        export ZOCALO_CONFIG="/scratch/wdr83388/workspace/zocalo-config/zocalo/configuration.yaml"
+        echo dlstbx.wrap -e staging --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
+        dlstbx.wrap -e staging --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
         
     volumes: 
     - name: dlsfilesystem
