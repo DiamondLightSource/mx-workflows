@@ -25,8 +25,6 @@ spec:
       volumeMounts:
       - name: "recwrap-workingdir"
         mountPath: "/dls/tmp/wdr83388"
-      - name: "zocalo-config"
-        mountPath: "/dls_sw/apps/zocalo/"
       source: |
         export ZOCALO_CONFIG="/dls_sw/apps/zocalo/staging/configuration.yaml"
         echo dlstbx.wrap -e staging --wrap dc_sim --
@@ -38,9 +36,6 @@ spec:
       hostPath:
         path: "/dls/tmp/wdr83388"
         type: Directory
-    - name: zocalo-config
-      hostPath:
-        path: "/dls_sw/apps/zocalo/"
 
   - name: workflow-entry
     dag:
