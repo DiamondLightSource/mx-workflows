@@ -12,12 +12,17 @@ spec:
     parameters:
       - name: RECIPEWRAP
         value: "" # default value
+      - name: OUTBOX
+        value: "" # default value - directory the wrapper writes its outbound
+                  # recipe messages to, in place of a broker it can't reach.
+                  # Read back and replayed by DLSWorkflowsCluster.watch_job.
 
   templates:
   - name: run-dc-sim
     inputs:
       parameters:
         - name: RECIPEWRAP
+        - name: OUTBOX
     script:
       image: ghcr.io/diamondlightsource/dlstbx
       command: [bash]
@@ -27,11 +32,10 @@ spec:
         mountPath: "/dls/tmp/wdr83388"
       source: |
         export ZOCALO_CONFIG="/dls_sw/apps/zocalo/staging/configuration.yaml"
-        echo dlstbx.wrap -e staging --wrap dc_sim --
-         "{{inputs.parameters.RECIPEWRAP}}" >runinfo
-        dlstbx.wrap -e staging --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
-        
-    volumes: 
+        echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
+        dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
+
+    volumes:
     - name: recwrap-workingdir
       hostPath:
         path: "/dls/tmp/wdr83388"
@@ -46,5 +50,7 @@ spec:
           parameters:
           - name: RECIPEWRAP
             value: "{{workflow.parameters.RECIPEWRAP}}"
+          - name: OUTBOX
+            value: "{{workflow.parameters.OUTBOX}}"
 
 
