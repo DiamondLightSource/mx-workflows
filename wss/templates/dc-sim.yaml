@@ -31,7 +31,7 @@ spec:
       - name: "recwrap-workingdir"
         mountPath: "/dls/tmp/wdr83388"
       source: |
-        export ZOCALO_CONFIG="/dls_sw/apps/zocalo/staging/configuration.yaml"
+        export ZOCALO_CONFIG="/dls/science/users/wdr83388/zocalo-config/zocalo/configuration.yaml"
         echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
         dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
 
