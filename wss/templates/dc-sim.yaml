@@ -28,6 +28,8 @@ spec:
       command: [bash]
       workingDir: "/dls/tmp/wdr83388"
       volumeMounts:
+      - name: "myscience"
+        mountPath: "/dls/science/users/wdr83388/"
       - name: "recwrap-workingdir"
         mountPath: "/dls/tmp/wdr83388"
       source: |
@@ -36,6 +38,10 @@ spec:
         dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
 
     volumes:
+    - name: myscience
+      hostPath:
+        path: "/dls/science/users/wdr83388/"
+        type: Directory
     - name: recwrap-workingdir
       hostPath:
         path: "/dls/tmp/wdr83388"
