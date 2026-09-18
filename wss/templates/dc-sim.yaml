@@ -25,6 +25,10 @@ spec:
         - name: OUTBOX
     script:
       image: ghcr.io/diamondlightsource/dlstbx:wss
+      # ":wss" moves on every push to the branch, and the k8s default for a tag
+      # other than ":latest" is IfNotPresent - without this a node that already
+      # pulled an earlier ":wss" would quietly keep running stale code.
+      imagePullPolicy: Always
       command: [bash]
       workingDir: "/dls/tmp/wdr83388"
       volumeMounts:
@@ -34,7 +38,9 @@ spec:
         mountPath: "/dls/tmp/wdr83388"
       source: |
         export ZOCALO_CONFIG="/dls/science/users/wdr83388/zocalo-config/zocalo/configuration.yaml"
-        echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >runinfo
+        # Record the command per-job, next to the recipewrapper. Writing it to the
+        # shared workingDir meant every run overwrote the previous run's copy.
+        echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >"$(dirname "{{inputs.parameters.RECIPEWRAP}}")/runinfo"
         dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
 
     volumes:
