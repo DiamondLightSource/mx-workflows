@@ -24,7 +24,7 @@ spec:
         - name: RECIPEWRAP
         - name: OUTBOX
     script:
-      image: ghcr.io/diamondlightsource/dlstbx
+      image: ghcr.io/diamondlightsource/dlstbx:wss
       command: [bash]
       workingDir: "/dls/tmp/wdr83388"
       volumeMounts:
