@@ -16,6 +16,11 @@ spec:
         value: "" # default value - directory the wrapper writes its outbound
                   # recipe messages to, in place of a broker it can't reach.
                   # Read back and replayed by DLSWorkflowsCluster.watch_job.
+      - name: WRAPPER
+        value: "dc_sim" # zocalo.wrappers entry point to run. Overridable so the
+                        # outbox path can be exercised with a wrapper that has no
+                        # external dependencies (e.g. "dummy"), separately from
+                        # whether dc_sim itself can run in a pod.
 
   templates:
   - name: run-dc-sim
@@ -23,6 +28,7 @@ spec:
       parameters:
         - name: RECIPEWRAP
         - name: OUTBOX
+        - name: WRAPPER
     script:
       image: ghcr.io/diamondlightsource/dlstbx:wss
       # ":wss" moves on every push to the branch, and the k8s default for a tag
@@ -40,8 +46,8 @@ spec:
         export ZOCALO_CONFIG="/dls/science/users/wdr83388/zocalo-config/zocalo/configuration.yaml"
         # Record the command per-job, next to the recipewrapper. Writing it to the
         # shared workingDir meant every run overwrote the previous run's copy.
-        echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >"$(dirname "{{inputs.parameters.RECIPEWRAP}}")/runinfo"
-        dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap dc_sim --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
+        echo dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap {{inputs.parameters.WRAPPER}} --recipewrapper "{{inputs.parameters.RECIPEWRAP}}" >"$(dirname "{{inputs.parameters.RECIPEWRAP}}")/runinfo"
+        dlstbx.wrap -e offline -t OutboxTransport --outbox "{{inputs.parameters.OUTBOX}}" --wrap {{inputs.parameters.WRAPPER}} --recipewrapper "{{inputs.parameters.RECIPEWRAP}}"
 
     volumes:
     - name: myscience
@@ -64,5 +70,7 @@ spec:
             value: "{{workflow.parameters.RECIPEWRAP}}"
           - name: OUTBOX
             value: "{{workflow.parameters.OUTBOX}}"
+          - name: WRAPPER
+            value: "{{workflow.parameters.WRAPPER}}"
 
 
